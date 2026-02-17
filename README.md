@@ -1,59 +1,146 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🚗 Automotive Laravel App - Kubernetes Deployment
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A PHP Laravel application deployed on Kubernetes (Minikube) with Zero Downtime Rolling Updates on AWS EC2.
 
-## About Laravel
+## 🏗️ Architecture
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Cloud**: AWS EC2 (t3.small)
+- **OS**: Ubuntu 24.04 LTS
+- **Container**: Docker
+- **Orchestration**: Kubernetes (Minikube)
+- **App**: PHP Laravel 12
+- **Web Server**: Apache
+- **Database**: SQLite
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🚀 Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- ✅ Containerized Laravel application
+- ✅ Kubernetes deployment with 3 replicas
+- ✅ Zero Downtime Rolling Updates
+- ✅ Health checks (Liveness & Readiness probes)
+- ✅ Resource limits and requests
+- ✅ Rollback capability
+- ✅ Version control with Git
 
-## Learning Laravel
+## 📋 Prerequisites
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- AWS EC2 instance (t3.small)
+- Docker
+- Minikube
+- kubectl
+- PHP & Composer
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🛠️ Setup Instructions
 
-## Laravel Sponsors
+### 1. Install Docker
+```bash
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo usermod -aG docker $USER
+newgrp docker
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 2. Install kubectl
+```bash
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+```
 
-### Premium Partners
+### 3. Install Minikube
+```bash
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo install minikube-linux-amd64 /usr/local/bin/minikube
+minikube start --driver=docker --memory=1800 --cpus=2
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 4. Create Laravel Project
+```bash
+composer create-project laravel/laravel automotive-app
+cd automotive-app
+```
 
-## Contributing
+### 5. Build Docker Image
+```bash
+eval $(minikube docker-env)
+docker build -t automotive-laravel:v1 .
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 6. Deploy to Kubernetes
+```bash
+kubectl apply -f k8s-deployment.yaml
+kubectl apply -f k8s-service.yaml
+```
 
-## Code of Conduct
+### 7. Access Application
+```bash
+minikube ip
+# Access via http://MINIKUBE-IP:30080
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## 🔄 Rolling Updates
 
-## Security Vulnerabilities
+### Deploy New Version
+```bash
+# Build new image
+docker build -t automotive-laravel:v2 .
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# Update deployment
+kubectl set image deployment/laravel-deployment laravel-app=automotive-laravel:v2
 
-## License
+# Monitor rollout
+kubectl rollout status deployment/laravel-deployment
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Rollback
+```bash
+# View history
+kubectl rollout history deployment/laravel-deployment
+
+# Rollback to previous version
+kubectl rollout undo deployment/laravel-deployment
+
+# Rollback to specific version
+kubectl rollout undo deployment/laravel-deployment --to-revision=1
+```
+
+## 📊 Kubernetes Configuration
+
+### Rolling Update Strategy
+```yaml
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 1        # One extra pod during update
+    maxUnavailable: 1  # One pod can be down during update
+```
+
+### Health Checks
+```yaml
+livenessProbe:   # Restarts unhealthy containers
+  httpGet:
+    path: /
+    port: 80
+readinessProbe:  # Removes from service if not ready
+  httpGet:
+    path: /
+    port: 80
+```
+
+## 📝 Version History
+
+| Version | Description | Banner Color |
+|---------|-------------|--------------|
+| v1.0 | Initial deployment | None |
+| v2.0 | Rolling update demo | Purple |
+| v3.0 | Rolling update demo | Green |
+
+## 🧹 Cleanup
+```bash
+kubectl delete -f k8s-deployment.yaml
+kubectl delete -f k8s-service.yaml
+minikube stop
+minikube delete
+```
+
+## 👨‍💻 Author
+- **GitHub**: YashEC-19
