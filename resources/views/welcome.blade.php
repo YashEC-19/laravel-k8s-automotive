@@ -19,7 +19,7 @@
             </style>
         @endif
     </head>
-    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center; padding: 20px; font-size: 24px; font-weight: bold; width: 100%;">🚗 Automotive App - Version 2.0 | Running on Kubernetes with Zero Downtime! 🚗</div><body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
+    <div style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; text-align: center; padding: 20px; font-size: 24px; font-weight: bold; width: 100%;">🚗 Automotive App - Version 3.0 | Zero Downtime Rolling Update on Kubernetes! 🚗</div><body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col">
         <header class="w-full lg:max-w-4xl max-w-[335px] text-sm mb-6 not-has-[nav]:hidden">
             @if (Route::has('login'))
                 <nav class="flex items-center justify-end gap-4">
