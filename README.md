@@ -1,8 +1,8 @@
-# 🚗 Automotive Laravel App - Kubernetes Deployment
+ Automotive Laravel App - Kubernetes Deployment
 
 A PHP Laravel application deployed on Kubernetes (Minikube) with Zero Downtime Rolling Updates on AWS EC2.
 
-## 🏗️ Architecture
+Architecture
 
 - **Cloud**: AWS EC2 (t3.small)
 - **OS**: Ubuntu 24.04 LTS
@@ -12,17 +12,17 @@ A PHP Laravel application deployed on Kubernetes (Minikube) with Zero Downtime R
 - **Web Server**: Apache
 - **Database**: SQLite
 
-## 🚀 Features
+Features
 
-- ✅ Containerized Laravel application
-- ✅ Kubernetes deployment with 3 replicas
-- ✅ Zero Downtime Rolling Updates
-- ✅ Health checks (Liveness & Readiness probes)
-- ✅ Resource limits and requests
-- ✅ Rollback capability
-- ✅ Version control with Git
+- Containerized Laravel application
+- Kubernetes deployment with 3 replicas
+- Zero Downtime Rolling Updates
+- Health checks (Liveness & Readiness probes)
+- Resource limits and requests
+- Rollback capability
+- Version control with Git
 
-## 📋 Prerequisites
+Prerequisites
 
 - AWS EC2 instance (t3.small)
 - Docker
@@ -30,7 +30,7 @@ A PHP Laravel application deployed on Kubernetes (Minikube) with Zero Downtime R
 - kubectl
 - PHP & Composer
 
-## 🛠️ Setup Instructions
+Setup Instructions
 
 ### 1. Install Docker
 ```bash
@@ -77,7 +77,7 @@ minikube ip
 # Access via http://MINIKUBE-IP:30080
 ```
 
-## 🔄 Rolling Updates
+Rolling Updates
 
 ### Deploy New Version
 ```bash
@@ -103,7 +103,7 @@ kubectl rollout undo deployment/laravel-deployment
 kubectl rollout undo deployment/laravel-deployment --to-revision=1
 ```
 
-## 📊 Kubernetes Configuration
+Kubernetes Configuration
 
 ### Rolling Update Strategy
 ```yaml
@@ -126,7 +126,7 @@ readinessProbe:  # Removes from service if not ready
     port: 80
 ```
 
-## 📝 Version History
+Version History
 
 | Version | Description | Banner Color |
 |---------|-------------|--------------|
@@ -134,7 +134,7 @@ readinessProbe:  # Removes from service if not ready
 | v2.0 | Rolling update demo | Purple |
 | v3.0 | Rolling update demo | Green |
 
-## 🧹 Cleanup
+Cleanup
 ```bash
 kubectl delete -f k8s-deployment.yaml
 kubectl delete -f k8s-service.yaml
